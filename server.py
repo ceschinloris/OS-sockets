@@ -15,11 +15,12 @@ class ClientThread(threading.Thread):
 
     def run(self):
         print("Connection de %s %s" % (self.ip, self.port,))
-
-        r = self.clientsocket.recv(2048)
-        print("Ouverture du fichier: ", r, "...")
-        fp = open(r, 'rb')
-        self.clientsocket.send(fp.read())
+        while True:
+            r = self.clientsocket.recv(2048)
+            print("Ouverture du fichier: ", r, "...")
+            fp = open(r, 'rb')
+            self.clientsocket.send(fp.read())
+            # break si on veut quitter
 
         print("Client déconnecté...")
 
