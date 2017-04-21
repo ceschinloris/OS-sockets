@@ -45,10 +45,9 @@ class ClientThread(threading.Thread):
         file_list = os.listdir(self.current_path.absolute())
         self.clientsocket.send(pickle.dumps(file_list))
 
-
     def cd(self, args):
         """ args : 0 : path"""
-        if os.path.isdir(str(self.current_path)+'/'+args):
+        if os.path.isdir(str(self.current_path) + '/' + args):
 
             self.current_path = Path(os.path.join(self.current_path, args)).resolve()
 
@@ -56,10 +55,12 @@ class ClientThread(threading.Thread):
         else:
             self.clientsocket.send("2".encode())
 
-
     def mkdir(self, args):
-        """ args : 0 : folder name"""
-        pass
+        try:
+            os.mkdir(os.path.join(self.current_path.absolute(), args))
+            self.clientsocket.send("1".encode())
+        except FileExistsError as e:
+            self.clientsocket.send(str(e).encode())
 
     def get(self, args):
         """ args : 0 : file name
@@ -77,7 +78,7 @@ class ClientThread(threading.Thread):
     def exit(self, args):
         self.is_running = False
 
-    def get_current_path(self,args):
+    def get_current_path(self, args):
         """ args : void"""
         self.clientsocket.send(str(self.current_path.absolute()).encode())
 

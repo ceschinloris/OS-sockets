@@ -48,13 +48,19 @@ class Client:
         r = self.s.recv(self.CHIFFRE)
 
         #error code
-
-        self.get_current_path()
+        if r.decode() == "1":
+            self.get_current_path()
+        else:
+            print("Error, folder \"" + path + "\" doesn't exist")
 
 
     def mkdir(self, args):
         """ args : 0 : folder name"""
-        pass
+        self.s.send(("mkdir:"+args[0]).encode())
+
+        r = self.s.recv(self.CHIFFRE)
+        if r.decode() is not "1":
+            print(r.decode())
 
 
     def get(self, args):
