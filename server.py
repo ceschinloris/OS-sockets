@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
+
 import os
 import socket
 import threading
@@ -57,6 +58,7 @@ class ClientThread(threading.Thread):
             self.clientsocket.send("2".encode())
 
     def mkdir(self, args):
+        """ args : 0 : folder name"""
         try:
             os.mkdir(os.path.join(self.current_path.absolute(), args))
             self.clientsocket.send("1".encode())
@@ -81,9 +83,12 @@ class ClientThread(threading.Thread):
             f.write(file)
 
     def exec(self, args):
-        os.system(args)
-        # TODO : recuperer la sortie console et la renvoyer
+        """ args : 0 : command """
+        # os.system(args)
+        output = os.popen(args).read()
+        self.clientsocket.send(output.encode())
 
+    # close connection
     def exit(self, args):
         self.is_running = False
 

