@@ -38,8 +38,6 @@ class Client:
 
             args = shlex.split(command)
 
-            print(args)
-
             try:
                 self.commands[args[0]](args[1:])
             except KeyError:

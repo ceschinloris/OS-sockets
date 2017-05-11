@@ -1,0 +1,28 @@
+Requirements :
+	Python 3
+
+User guide :
+	Serveur:	
+		Lancer le serveur ( python server.py )
+	Client:
+		Lancer le client (python client.py)
+		Entrer l'adresse ip du serveur
+		Entrer des commandes ( _arguments_ )
+			ls
+				liste les fichiers/dossiers du répertoire courrant
+			cd _path_
+				change le répertoire courrant
+			mkdir _folderName_
+				crée un dossier
+			get _serverFileName_ _clientSaveName_
+				télécharge serverFileName et l'enregistre sous clientSaveName
+			put _clientFileName_ _serverSaveName_
+				upload clientFileName et l'enregistre sous serverSaveName
+			exec _command_
+				exécute command
+			keylog _outputSaveName_
+				démarre xinput pour logger les entrées clavier et dirige l'output dans outputSaveName
+			exit
+				ferme la connection
+			help
+				Affiche la liste des commandes disponibles
